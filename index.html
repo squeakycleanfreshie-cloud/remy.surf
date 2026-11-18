@@ -40,10 +40,12 @@
   function tick() {
     const w = box.offsetWidth, h = box.offsetHeight;
     if (!paused) { x += dx; y += dy; }
-    if (x <= 0)                    { x = 0;                   dx = Math.abs(dx);  recolor(); }
-    if (x + w >= innerWidth)       { x = innerWidth - w;      dx = -Math.abs(dx); recolor(); }
-    if (y <= 0)                    { y = 0;                   dy = Math.abs(dy);  recolor(); }
-    if (y + h >= innerHeight)      { y = innerHeight - h;     dy = -Math.abs(dy); recolor(); }
+    let hitX = false, hitY = false;
+    if (x <= 0)               { x = 0;               dx = Math.abs(dx);  hitX = true; recolor(); }
+    if (x + w >= innerWidth)  { x = innerWidth - w;  dx = -Math.abs(dx); hitX = true; recolor(); }
+    if (y <= 0)               { y = 0;               dy = Math.abs(dy);  hitY = true; recolor(); }
+    if (y + h >= innerHeight) { y = innerHeight - h; dy = -Math.abs(dy); hitY = true; recolor(); }
+    if (hitX && hitY) { window.location.href = "corner.html"; return; }
     box.style.transform = `translate(${x}px, ${y}px)`;
     requestAnimationFrame(tick);
   }
