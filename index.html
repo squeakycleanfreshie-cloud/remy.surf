@@ -28,6 +28,7 @@
 <script>
   const box = document.getElementById("box");
   let x = 50, y = 50, dx = 2, dy = 2;
+  let paused = false, clicks = 0, clickTimer;
   const colors = ["#000000"];
   let c = 0;
 
@@ -38,7 +39,7 @@
 
   function tick() {
     const w = box.offsetWidth, h = box.offsetHeight;
-    x += dx; y += dy;
+    if (!paused) { x += dx; y += dy; }
     if (x <= 0)                    { x = 0;                   dx = Math.abs(dx);  recolor(); }
     if (x + w >= innerWidth)       { x = innerWidth - w;      dx = -Math.abs(dx); recolor(); }
     if (y <= 0)                    { y = 0;                   dy = Math.abs(dy);  recolor(); }
@@ -47,6 +48,19 @@
     requestAnimationFrame(tick);
   }
   tick();
+
+  // pause while hovering so it's easy to click
+  box.style.cursor = "pointer";
+  box.addEventListener("mouseenter", () => paused = true);
+  box.addEventListener("mouseleave", () => paused = false);
+
+  // 3 clicks -> albums page
+  box.addEventListener("click", () => {
+    clicks++;
+    clearTimeout(clickTimer);
+    clickTimer = setTimeout(() => clicks = 0, 800);
+    if (clicks >= 3) window.location.href = "albums.html";
+  });
 </script>
 </body>
 </html>
