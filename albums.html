@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>albums</title>
+<style>
+  body { margin: 0; background: #fff; color: #000; }
+  #back { position: fixed; top: 8px; left: 8px; color: #000; background: #fff; padding: 2px 8px; z-index: 1; }
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    width: 100%;
+    margin: 0;
+  }
+  #grid img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+</style>
+</head>
+<body>
+<a id="back" href="index.html">&larr; back</a>
+<div id="grid"></div>
+<script>
+  // 25 albums. put your image path in img (e.g. "albums/1.jpg"). leave "" for a placeholder.
+  const albums = [
+    { title: "album 1",  img: "" },
+    { title: "album 2",  img: "" },
+    { title: "album 3",  img: "" },
+    { title: "album 4",  img: "" },
+    { title: "album 5",  img: "" },
+    { title: "album 6",  img: "" },
+    { title: "album 7",  img: "" },
+    { title: "album 8",  img: "" },
+    { title: "album 9",  img: "" },
+    { title: "album 10", img: "" },
+    { title: "album 11", img: "" },
+    { title: "album 12", img: "" },
+    { title: "album 13", img: "" },
+    { title: "album 14", img: "" },
+    { title: "album 15", img: "" },
+    { title: "album 16", img: "" },
+    { title: "album 17", img: "" },
+    { title: "album 18", img: "" },
+    { title: "album 19", img: "" },
+    { title: "album 20", img: "" },
+    { title: "album 21", img: "" },
+    { title: "album 22", img: "" },
+    { title: "album 23", img: "" },
+    { title: "album 24", img: "" },
+    { title: "album 25", img: "" }
+  ];
+
+  function placeholder(n) {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#ddd"/><text x="50" y="57" font-size="22" text-anchor="middle" fill="#888">${n}</text></svg>`;
+    return "data:image/svg+xml," + encodeURIComponent(svg);
+  }
+
+  const grid = document.getElementById("grid");
+  albums.forEach((a, i) => {
+    const img = document.createElement("img");
+    img.src = a.img || placeholder(i + 1);
+    img.alt = a.title;
+    img.title = a.title;
+    grid.appendChild(img);
+  });
+</script>
+</body>
+</html>
