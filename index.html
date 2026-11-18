@@ -6,7 +6,7 @@
 <title>remy moreau</title>
 <style>
   html, body { margin: 0; height: 100%; background: #fff; overflow: hidden; }
-  #box {
+  #box, .copy {
     position: absolute;
     left: 0; top: 0;
     text-align: center;
@@ -79,6 +79,48 @@
   // press r -> after the next wall bounce, it heads straight into a corner
   document.addEventListener("keydown", (e) => {
     if (e.key.toLowerCase() === "r" && state === 0) state = 1;
+  });
+
+  // konami code (up up down down left right left right b a) -> lots of copies, again to clear
+  const seq = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+  let pos = 0, copies = [];
+
+  function toggleCopies() {
+    if (copies.length) { copies.forEach(c => c.el.remove()); copies = []; return; }
+    for (let i = 0; i < 25; i++) {
+      const el = box.cloneNode(true);
+      el.removeAttribute("id");
+      el.className = "copy";
+      el.style.cursor = "default";
+      document.body.appendChild(el);
+      copies.push({
+        el,
+        x: Math.random() * Math.max(innerWidth - el.offsetWidth, 1),
+        y: Math.random() * Math.max(innerHeight - el.offsetHeight, 1),
+        dx: (1 + Math.random() * 2) * (Math.random() < 0.5 ? -1 : 1),
+        dy: (1 + Math.random() * 2) * (Math.random() < 0.5 ? -1 : 1)
+      });
+    }
+  }
+
+  function moveCopies() {
+    copies.forEach(c => {
+      const w = c.el.offsetWidth, h = c.el.offsetHeight;
+      c.x += c.dx; c.y += c.dy;
+      if (c.x <= 0)              { c.x = 0;              c.dx = Math.abs(c.dx); }
+      if (c.x + w >= innerWidth) { c.x = innerWidth - w; c.dx = -Math.abs(c.dx); }
+      if (c.y <= 0)              { c.y = 0;              c.dy = Math.abs(c.dy); }
+      if (c.y + h >= innerHeight){ c.y = innerHeight - h; c.dy = -Math.abs(c.dy); }
+      c.el.style.transform = `translate(${c.x}px, ${c.y}px)`;
+    });
+    requestAnimationFrame(moveCopies);
+  }
+  moveCopies();
+
+  document.addEventListener("keydown", (e) => {
+    const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    pos = (k === seq[pos]) ? pos + 1 : (k === seq[0] ? 1 : 0);
+    if (pos === seq.length) { pos = 0; toggleCopies(); }
   });
 </script>
 </body>
