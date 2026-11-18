@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>call me maybe</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #fff; color: #000; }
+  body { display: flex; align-items: center; justify-content: center; }
+  p { font-size: 14px; text-align: center; line-height: 1.6; margin: 0; }
+  a { color: #000; text-decoration: none; }
+</style>
+</head>
+<body>
+<p>
+  call me maybe:<br>
+  <a href="tel:0430590710">0430590710</a>
+</p>
+</body>
+</html>
