@@ -16,6 +16,35 @@
     line-height: 1.4;
     font-size: 24px;
   }
+  #moons { display: inline-block; }
+  #sky {
+    position: fixed; inset: 0; z-index: 100;
+    background: #000;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.8s;
+  }
+  #sky.on { opacity: 1; pointer-events: auto; }
+  #moon {
+    position: relative; flex: none;
+    width: 110vmax; height: 110vmax;
+    border-radius: 50%; overflow: hidden;
+    background: #fff;
+  }
+  #moon::after {
+    content: ""; position: absolute; inset: 0;
+    background: #000; border-radius: 50%;
+  }
+  #sky.on #moon { animation: spin 5s ease-in-out; }
+  #sky.on #moon::after { animation: phase 5s linear; }
+  @keyframes spin { to { transform: rotate(720deg); } }
+  @keyframes phase {
+    0%     { transform: translateX(0); }
+    50%    { transform: translateX(100%); }
+    50.01% { transform: translateX(-100%); }
+    100%   { transform: translateX(0); }
+  }
 </style>
 </head>
 <body>
@@ -23,8 +52,9 @@
   remy moreau<br>
   creator of stuff<br>
   he/him<br>
-  ~𖥔☾𖤓☽𖥔~
+  <span id="moons">~𖥔☾𖤓☽𖥔~</span>
 </div>
+<div id="sky"><div id="moon"></div></div>
 <script>
   const box = document.getElementById("box");
   let x = 20 + Math.random() * 300, y = 20 + Math.random() * 150, dx = 2, dy = 1.6;
@@ -34,7 +64,6 @@
 
   function recolor() {
     c = (c + 1) % colors.length;
-    box.style.color = colors[c];
   }
 
   function tick() {
@@ -121,6 +150,21 @@
     const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     pos = (k === seq[pos]) ? pos + 1 : (k === seq[0] ? 1 : 0);
     if (pos === seq.length) { pos = 0; toggleCopies(); }
+  });
+
+  // click the moons -> huge moon fills the screen, goes through its phases, then fades away
+  const moons = document.getElementById("moons");
+  const sky = document.getElementById("sky");
+  let busy = false;
+  moons.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (busy) return;
+    busy = true;
+    sky.classList.add("on");
+    setTimeout(() => {
+      sky.classList.remove("on");
+      busy = false;
+    }, 5000);
   });
 </script>
 </body>
