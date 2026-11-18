@@ -28,7 +28,7 @@
 <script>
   const box = document.getElementById("box");
   let x = 20 + Math.random() * 300, y = 20 + Math.random() * 150, dx = 2, dy = 1.6;
-  let paused = false, clicks = 0, clickTimer;
+  let paused = false, clicks = 0, clickTimer, armed = false;
   const colors = ["#000000"];
   let c = 0;
 
@@ -45,7 +45,7 @@
     if (x + w >= innerWidth)  { x = innerWidth - w;  dx = -Math.abs(dx); hitX = true; recolor(); }
     if (y <= 0)               { y = 0;               dy = Math.abs(dy);  hitY = true; recolor(); }
     if (y + h >= innerHeight) { y = innerHeight - h; dy = -Math.abs(dy); hitY = true; recolor(); }
-    if (hitX && hitY) { window.location.href = "corner.html"; return; }
+    if ((hitX && hitY) || (armed && (hitX || hitY))) { window.location.href = "corner.html"; return; }
     box.style.transform = `translate(${x}px, ${y}px)`;
     requestAnimationFrame(tick);
   }
@@ -62,6 +62,18 @@
     clearTimeout(clickTimer);
     clickTimer = setTimeout(() => clicks = 0, 800);
     if (clicks >= 3) window.location.href = "albums.html";
+  });
+
+  // press r -> aim straight at the corner it's heading toward
+  document.addEventListener("keydown", (e) => {
+    if (e.key.toLowerCase() !== "r" || armed) return;
+    const w = box.offsetWidth, h = box.offsetHeight;
+    const tx = dx > 0 ? innerWidth - w : 0;
+    const ty = dy > 0 ? innerHeight - h : 0;
+    const ratio = Math.abs(ty - y) / Math.max(Math.abs(tx - x), 1);
+    dy = (dy > 0 ? 1 : -1) * Math.abs(dx) * ratio;
+    armed = true;
+    paused = false;
   });
 </script>
 </body>
